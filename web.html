@@ -1,0 +1,3534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bendahara BEM INSIS Indonesia</title>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+    --primary:#1d4ed8;
+    --primary-dark:#1e3a8a;
+    --secondary:#0f172a;
+    --bg:#f1f5f9;
+    --white:#ffffff;
+    --text:#0f172a;
+    --muted:#64748b;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --warning:#d97706;
+    --border:#e2e8f0;
+    --sidebar:250px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:var(--sidebar);
+    height:100vh;
+    background:var(--secondary);
+    color:white;
+    padding:20px 12px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.logo{
+    padding:10px;
+    margin-bottom:20px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.logo h2{
+    font-size:19px;
+}
+
+.logo p{
+    font-size:12px;
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    text-transform:uppercase;
+    padding:12px 10px 6px;
+}
+
+.nav-btn{
+    width:100%;
+    background:none;
+    border:0;
+    color:#cbd5e1;
+    text-align:left;
+    padding:11px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:3px;
+    font-size:14px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+    background:#1e40af;
+    color:white;
+}
+
+/* MAIN */
+.main{
+    margin-left:var(--sidebar);
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:900;
+}
+
+.topbar h1{
+    font-size:20px;
+}
+
+.topbar-info{
+    text-align:right;
+}
+
+.topbar-info strong{
+    display:block;
+    font-size:14px;
+}
+
+.topbar-info span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.content{
+    padding:25px;
+}
+
+/* PAGE */
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-title{
+    margin-bottom:20px;
+}
+
+.page-title h2{
+    font-size:24px;
+}
+
+.page-title p{
+    color:var(--muted);
+    margin-top:5px;
+}
+
+/* CARDS */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 2px 5px rgba(0,0,0,.03);
+}
+
+.card small{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.card h3{
+    margin-top:10px;
+    font-size:24px;
+}
+
+.card.success h3{color:var(--success)}
+.card.danger h3{color:var(--danger)}
+.card.warning h3{color:var(--warning)}
+.card.primary h3{color:var(--primary)}
+
+/* GRID */
+.grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.panel-header h3{
+    font-size:17px;
+}
+
+/* BUTTON */
+.btn{
+    border:none;
+    padding:9px 14px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-primary:hover{
+    background:var(--primary-dark);
+}
+
+.btn-success{
+    background:var(--success);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--danger);
+    color:white;
+}
+
+.btn-warning{
+    background:var(--warning);
+    color:white;
+}
+
+.btn-light{
+    background:#e2e8f0;
+    color:#334155;
+}
+
+/* TABLE */
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th,
+td{
+    padding:11px 10px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    background:#f8fafc;
+    font-weight:bold;
+}
+
+tr:hover td{
+    background:#f8fafc;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+/* FORM */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:13px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:7px;
+    outline:none;
+    background:white;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--primary);
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+/* BADGE */
+.badge{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.badge-success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-danger{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.badge-warning{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.badge-primary{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+/* SEARCH */
+.toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:15px;
+}
+
+.toolbar input,
+.toolbar select{
+    max-width:230px;
+}
+
+/* MODAL */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.6);
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:white;
+    width:100%;
+    max-width:750px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:none;
+    border:none;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+/* TOAST */
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#0f172a;
+    color:white;
+    padding:13px 18px;
+    border-radius:8px;
+    display:none;
+    z-index:3000;
+}
+
+.toast.show{
+    display:block;
+}
+
+/* MOBILE */
+.mobile-menu{
+    display:none;
+}
+
+@media(max-width:1100px){
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+        border:none;
+        background:none;
+        font-size:22px;
+        cursor:pointer;
+        margin-right:10px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .grid-2,
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .topbar h1{
+        font-size:16px;
+    }
+}
+
+/* PRINT */
+@media print{
+    .sidebar,
+    .topbar,
+    .no-print,
+    .actions,
+    button{
+        display:none!important;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:0;
+    }
+
+    .page{
+        display:none!important;
+    }
+
+    #page-laporan{
+        display:block!important;
+    }
+
+    body{
+        background:white;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <h2>Bendahara BEM</h2>
+        <p>INSIS Indonesia</p>
+    </div>
+
+    <div class="menu-title">Utama</div>
+
+    <button class="nav-btn active" onclick="showPage('dashboard',this)">
+        📊 Dashboard
+    </button>
+
+    <div class="menu-title">Data</div>
+
+    <button class="nav-btn" onclick="showPage('anggota',this)">
+        👥 Data Anggota
+    </button>
+
+    <button class="nav-btn" onclick="showPage('mahasiswa',this)">
+        🎓 Seluruh Mahasiswa
+    </button>
+
+    <div class="menu-title">Keuangan</div>
+
+    <button class="nav-btn" onclick="showPage('kas',this)">
+        💰 Buku Kas
+    </button>
+
+    <button class="nav-btn" onclick="showPage('pembayaran',this)">
+        💳 Pembayaran Kas
+    </button>
+
+    <button class="nav-btn" onclick="showPage('anggaran',this)">
+        📋 Rencana Anggaran
+    </button>
+
+    <button class="nav-btn" onclick="showPage('pengajuan',this)">
+        📝 Pengajuan Dana
+    </button>
+
+    <div class="menu-title">Laporan</div>
+
+    <button class="nav-btn" onclick="showPage('laporan',this)">
+        📄 Laporan Keuangan
+    </button>
+
+    <button class="nav-btn" onclick="showPage('evaluasi',this)">
+        📈 Evaluasi Keuangan
+    </button>
+
+    <div class="menu-title">Data</div>
+
+    <button class="nav-btn" onclick="backupData()">
+        💾 Backup Data
+    </button>
+
+    <button class="nav-btn" onclick="document.getElementById('restoreInput').click()">
+        ♻️ Restore Data
+    </button>
+
+    <input
+        type="file"
+        id="restoreInput"
+        accept=".json"
+        style="display:none"
+        onchange="restoreData(event)"
+    >
+
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<header class="topbar">
+
+    <div style="display:flex;align-items:center;">
+        <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+        <h1 id="pageHeader">
+            Dashboard Bendahara
+        </h1>
+    </div>
+
+    <div class="topbar-info">
+        <strong>Bendahara BEM</strong>
+        <span id="currentDate"></span>
+    </div>
+
+</header>
+
+<div class="content">
+
+<!-- ================= DASHBOARD ================= -->
+
+<section class="page active" id="page-dashboard">
+
+    <div class="page-title">
+        <h2>Dashboard</h2>
+        <p>Ringkasan kondisi keuangan BEM INSIS Indonesia.</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card primary">
+            <small>Saldo Kas Saat Ini</small>
+            <h3 id="dashboardSaldo">Rp 0</h3>
+        </div>
+
+        <div class="card success">
+            <small>Total Pemasukan</small>
+            <h3 id="dashboardPemasukan">Rp 0</h3>
+        </div>
+
+        <div class="card danger">
+            <small>Total Pengeluaran</small>
+            <h3 id="dashboardPengeluaran">Rp 0</h3>
+        </div>
+
+        <div class="card warning">
+            <small>Total Tunggakan</small>
+            <h3 id="dashboardTunggakan">Rp 0</h3>
+        </div>
+
+        <div class="card primary">
+            <small>Jumlah Anggota</small>
+            <h3 id="dashboardAnggota">0</h3>
+        </div>
+
+        <div class="card success">
+            <small>Sudah Membayar</small>
+            <h3 id="dashboardLunas">0</h3>
+        </div>
+
+        <div class="card danger">
+            <small>Belum Membayar</small>
+            <h3 id="dashboardBelum">0</h3>
+        </div>
+
+        <div class="card warning">
+            <small>Total Transaksi</small>
+            <h3 id="dashboardTransaksi">0</h3>
+        </div>
+
+    </div>
+
+    <div class="grid-2">
+
+        <div class="panel">
+            <div class="panel-header">
+                <h3>Pemasukan & Pengeluaran</h3>
+            </div>
+
+            <canvas id="financeChart"></canvas>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h3>Status Pembayaran Kas</h3>
+            </div>
+
+            <canvas id="paymentChart"></canvas>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ANGGOTA ================= -->
+
+<section class="page" id="page-anggota">
+
+    <div class="page-title">
+        <h2>Data Anggota BEM</h2>
+        <p>Kelola data pengurus dan anggota BEM.</p>
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3>Daftar Anggota</h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="openAnggotaModal()">
+                + Tambah Anggota
+            </button>
+
+        </div>
+
+        <div class="toolbar">
+            <input
+                type="text"
+                id="searchAnggota"
+                placeholder="Cari nama / NIM..."
+                oninput="renderAnggota()">
+
+            <select id="filterDivisi" onchange="renderAnggota()">
+                <option value="">Semua Divisi</option>
+                <option>Ketua</option>
+                <option>Sekretaris</option>
+                <option>Bendahara</option>
+                <option>Pendidikan</option>
+                <option>Kesma Faspel</option>
+                <option>Ibadah</option>
+                <option>Perkebunan</option>
+                <option>Medinfo</option>
+                <option>Humas</option>
+            </select>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Divisi</th>
+                        <th>Jabatan</th>
+                        <th>Prodi</th>
+                        <th>Kas/Bulan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="anggotaTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MAHASISWA ================= -->
+
+<section class="page" id="page-mahasiswa">
+
+    <div class="page-title">
+        <h2>Data Seluruh Mahasiswa</h2>
+        <p>Database mahasiswa untuk kebutuhan administrasi.</p>
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3>Database Mahasiswa</h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="openMahasiswaModal()">
+                + Tambah Mahasiswa
+            </button>
+
+        </div>
+
+        <div class="toolbar">
+
+            <input
+                type="text"
+                id="searchMahasiswa"
+                placeholder="Cari nama / NIM..."
+                oninput="renderMahasiswa()">
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Prodi</th>
+                        <th>Semester</th>
+                        <th>WhatsApp</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="mahasiswaTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= BUKU KAS ================= -->
+
+<section class="page" id="page-kas">
+
+    <div class="page-title">
+        <h2>Buku Kas</h2>
+        <p>Pencatatan seluruh transaksi keuangan BEM.</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card success">
+            <small>Total Pemasukan</small>
+            <h3 id="kasPemasukan">Rp 0</h3>
+        </div>
+
+        <div class="card danger">
+            <small>Total Pengeluaran</small>
+            <h3 id="kasPengeluaran">Rp 0</h3>
+        </div>
+
+        <div class="card primary">
+            <small>Saldo</small>
+            <h3 id="kasSaldo">Rp 0</h3>
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3>Transaksi Keuangan</h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="openKasModal()">
+                + Tambah Transaksi
+            </button>
+
+        </div>
+
+        <div class="toolbar">
+
+            <input
+                id="searchKas"
+                type="text"
+                placeholder="Cari transaksi..."
+                oninput="renderKas()">
+
+            <select id="filterKas" onchange="renderKas()">
+                <option value="">Semua</option>
+                <option value="Pemasukan">Pemasukan</option>
+                <option value="Pengeluaran">Pengeluaran</option>
+            </select>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Jenis</th>
+                        <th>Kategori</th>
+                        <th>Keterangan</th>
+                        <th>Nominal</th>
+                        <th>Penanggung Jawab</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="kasTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PEMBAYARAN ================= -->
+
+<section class="page" id="page-pembayaran">
+
+    <div class="page-title">
+        <h2>Pembayaran Kas</h2>
+        <p>Monitoring pembayaran uang kas anggota.</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card success">
+            <small>Kas Terkumpul</small>
+            <h3 id="totalKasBayar">Rp 0</h3>
+        </div>
+
+        <div class="card danger">
+            <small>Total Tunggakan</small>
+            <h3 id="totalTunggakan">Rp 0</h3>
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3>Data Pembayaran</h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="openPembayaranModal()">
+                + Tambah Pembayaran
+            </button>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Bulan</th>
+                        <th>Nominal Wajib</th>
+                        <th>Dibayar</th>
+                        <th>Tunggakan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="pembayaranTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ANGGARAN ================= -->
+
+<section class="page" id="page-anggaran">
+
+    <div class="page-title">
+        <h2>Rencana Anggaran</h2>
+        <p>Perencanaan anggaran kegiatan BEM.</p>
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3>Daftar Rencana Anggaran</h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="openAnggaranModal()">
+                + Tambah Anggaran
+            </button>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Kegiatan</th>
+                        <th>Divisi</th>
+                        <th>Penanggung Jawab</th>
+                        <th>Tanggal</th>
+                        <th>Total Anggaran</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="anggaranTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PENGAJUAN ================= -->
+
+<section class="page" id="page-pengajuan">
+
+    <div class="page-title">
+        <h2>Pengajuan Dana</h2>
+        <p>Kelola pengajuan dana dari setiap divisi.</p>
+    </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3>Daftar Pengajuan</h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="openPengajuanModal()">
+                + Pengajuan Dana
+            </button>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Divisi</th>
+                        <th>Kegiatan</th>
+                        <th>Penanggung Jawab</th>
+                        <th>Jumlah</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="pengajuanTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LAPORAN ================= -->
+
+<section class="page" id="page-laporan">
+
+    <div class="page-title">
+        <h2>Laporan Keuangan</h2>
+        <p>Rekapitulasi keuangan BEM.</p>
+    </div>
+
+    <div class="panel">
+
+        <div class="toolbar no-print">
+
+            <input
+                type="date"
+                id="laporanMulai">
+
+            <input
+                type="date"
+                id="laporanSelesai">
+
+            <button
+                class="btn btn-primary"
+                onclick="generateLaporan()">
+                Tampilkan
+            </button>
+
+            <button
+                class="btn btn-success"
+                onclick="window.print()">
+                🖨 Cetak / PDF
+            </button>
+
+        </div>
+
+        <div id="laporanContent">
+
+            <div style="text-align:center;margin-bottom:25px;">
+                <h2>BEM INSIS INDONESIA</h2>
+                <p>LAPORAN KEUANGAN</p>
+                <p id="periodeLaporan">Semua Periode</p>
+            </div>
+
+            <div class="cards">
+
+                <div class="card success">
+                    <small>Pemasukan</small>
+                    <h3 id="laporanPemasukan">Rp 0</h3>
+                </div>
+
+                <div class="card danger">
+                    <small>Pengeluaran</small>
+                    <h3 id="laporanPengeluaran">Rp 0</h3>
+                </div>
+
+                <div class="card primary">
+                    <small>Saldo</small>
+                    <h3 id="laporanSaldo">Rp 0</h3>
+                </div>
+
+                <div class="card warning">
+                    <small>Tunggakan</small>
+                    <h3 id="laporanTunggakan">Rp 0</h3>
+                </div>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jenis</th>
+                            <th>Kategori</th>
+                            <th>Keterangan</th>
+                            <th>Nominal</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="laporanTable"></tbody>
+
+                </table>
+
+            </div>
+
+            <br><br>
+
+            <div style="display:flex;justify-content:space-between;text-align:center;">
+                <div>
+                    <p>Mengetahui,</p>
+                    <br><br><br>
+                    <strong>Ketua BEM</strong>
+                </div>
+
+                <div>
+                    <p>Bendahara,</p>
+                    <br><br><br>
+                    <strong>Bendahara BEM</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= EVALUASI ================= -->
+
+<section class="page" id="page-evaluasi">
+
+    <div class="page-title">
+        <h2>Evaluasi Keuangan</h2>
+        <p>Analisis kondisi keuangan berdasarkan data aktual.</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card primary">
+            <small>Jumlah Transaksi</small>
+            <h3 id="evaluasiTransaksi">0</h3>
+        </div>
+
+        <div class="card success">
+            <small>Rasio Pemasukan</small>
+            <h3 id="evaluasiPemasukan">0%</h3>
+        </div>
+
+        <div class="card danger">
+            <small>Rasio Pengeluaran</small>
+            <h3 id="evaluasiPengeluaran">0%</h3>
+        </div>
+
+        <div class="card warning">
+            <small>Kepatuhan Kas</small>
+            <h3 id="evaluasiKas">0%</h3>
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <h3 style="margin-bottom:15px;">
+            Ringkasan Evaluasi
+        </h3>
+
+        <div id="evaluasiText"></div>
+
+    </div>
+
+</section>
+
+</div>
+</main>
+
+
+<!-- ================= MODAL ANGGOTA ================= -->
+
+<div class="modal" id="anggotaModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+    <h3 id="anggotaModalTitle">Tambah Anggota</h3>
+    <button class="close" onclick="closeModal('anggotaModal')">×</button>
+</div>
+
+<form id="anggotaForm">
+
+<input type="hidden" id="anggotaId">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Nama Lengkap *</label>
+<input id="anggotaNama" required>
+</div>
+
+<div class="form-group">
+<label>NIM *</label>
+<input id="anggotaNim" required>
+</div>
+
+<div class="form-group">
+<label>Divisi</label>
+<select id="anggotaDivisi">
+<option>Ketua</option>
+<option>Sekretaris</option>
+<option>Bendahara</option>
+<option>Pendidikan</option>
+<option>Kesma Faspel</option>
+<option>Ibadah</option>
+<option>Perkebunan</option>
+<option>Medinfo</option>
+<option>Humas</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Jabatan</label>
+<input id="anggotaJabatan">
+</div>
+
+<div class="form-group">
+<label>Program Studi</label>
+<input id="anggotaProdi">
+</div>
+
+<div class="form-group">
+<label>Semester</label>
+<input id="anggotaSemester" type="number">
+</div>
+
+<div class="form-group">
+<label>WhatsApp</label>
+<input id="anggotaWa">
+</div>
+
+<div class="form-group">
+<label>Kas Bulanan</label>
+<input id="anggotaKas" type="number" value="0">
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="button" class="btn btn-light" onclick="closeModal('anggotaModal')">
+Batal
+</button>
+
+<button class="btn btn-primary">
+Simpan
+</button>
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+<!-- ================= MODAL MAHASISWA ================= -->
+
+<div class="modal" id="mahasiswaModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3>Tambah Mahasiswa</h3>
+<button class="close" onclick="closeModal('mahasiswaModal')">×</button>
+</div>
+
+<form id="mahasiswaForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Nama Lengkap *</label>
+<input id="mhsNama" required>
+</div>
+
+<div class="form-group">
+<label>NIM *</label>
+<input id="mhsNim" required>
+</div>
+
+<div class="form-group">
+<label>Program Studi</label>
+<input id="mhsProdi">
+</div>
+
+<div class="form-group">
+<label>Semester</label>
+<input id="mhsSemester" type="number">
+</div>
+
+<div class="form-group">
+<label>WhatsApp</label>
+<input id="mhsWa">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="mhsStatus">
+<option>Aktif</option>
+<option>Tidak Aktif</option>
+</select>
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="button" class="btn btn-light" onclick="closeModal('mahasiswaModal')">
+Batal
+</button>
+
+<button class="btn btn-primary">
+Simpan
+</button>
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+<!-- ================= MODAL KAS ================= -->
+
+<div class="modal" id="kasModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3 id="kasModalTitle">Tambah Transaksi</h3>
+<button class="close" onclick="closeModal('kasModal')">×</button>
+</div>
+
+<form id="kasForm">
+
+<input type="hidden" id="kasId">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Tanggal *</label>
+<input id="kasTanggal" type="date" required>
+</div>
+
+<div class="form-group">
+<label>Jenis *</label>
+<select id="kasJenis">
+<option>Pemasukan</option>
+<option>Pengeluaran</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Kategori</label>
+<select id="kasKategori">
+<option>Uang Kas</option>
+<option>Iuran Pengurus</option>
+<option>Dana Kampus</option>
+<option>Donasi</option>
+<option>Sponsorship</option>
+<option>Program Kerja</option>
+<option>Konsumsi</option>
+<option>Transportasi</option>
+<option>Perlengkapan</option>
+<option>Publikasi</option>
+<option>Administrasi</option>
+<option>Lainnya</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Nominal *</label>
+<input id="kasNominal" type="number" min="0" required>
+</div>
+
+<div class="form-group full">
+<label>Keterangan *</label>
+<input id="kasKeterangan" required>
+</div>
+
+<div class="form-group">
+<label>Penanggung Jawab</label>
+<input id="kasPenanggung">
+</div>
+
+<div class="form-group">
+<label>Metode</label>
+<select id="kasMetode">
+<option>Tunai</option>
+<option>Transfer</option>
+<option>E-Wallet</option>
+<option>Lainnya</option>
+</select>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-light"
+onclick="closeModal('kasModal')">
+Batal
+</button>
+
+<button class="btn btn-primary">
+Simpan
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+<!-- ================= MODAL PEMBAYARAN ================= -->
+
+<div class="modal" id="pembayaranModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3>Tambah Pembayaran Kas</h3>
+<button class="close" onclick="closeModal('pembayaranModal')">×</button>
+</div>
+
+<form id="pembayaranForm">
+
+<div class="form-grid">
+
+<div class="form-group full">
+<label>Anggota *</label>
+
+<select id="bayarAnggota" required>
+<option value="">Pilih anggota</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Bulan</label>
+<select id="bayarBulan">
+<option>Januari</option>
+<option>Februari</option>
+<option>Maret</option>
+<option>April</option>
+<option>Mei</option>
+<option>Juni</option>
+<option>Juli</option>
+<option>Agustus</option>
+<option>September</option>
+<option>Oktober</option>
+<option>November</option>
+<option>Desember</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Tahun</label>
+<input id="bayarTahun" type="number">
+</div>
+
+<div class="form-group">
+<label>Nominal Wajib</label>
+<input id="bayarWajib" type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>Nominal Dibayar</label>
+<input id="bayarNominal" type="number" min="0" required>
+</div>
+
+<div class="form-group">
+<label>Tanggal</label>
+<input id="bayarTanggal" type="date">
+</div>
+
+<div class="form-group">
+<label>Metode</label>
+<select id="bayarMetode">
+<option>Tunai</option>
+<option>Transfer</option>
+<option>E-Wallet</option>
+</select>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-light"
+onclick="closeModal('pembayaranModal')">
+Batal
+</button>
+
+<button class="btn btn-primary">
+Simpan
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+<!-- ================= MODAL ANGGARAN ================= -->
+
+<div class="modal" id="anggaranModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3>Tambah Rencana Anggaran</h3>
+<button class="close" onclick="closeModal('anggaranModal')">×</button>
+</div>
+
+<form id="anggaranForm">
+
+<div class="form-grid">
+
+<div class="form-group full">
+<label>Nama Kegiatan *</label>
+<input id="anggaranKegiatan" required>
+</div>
+
+<div class="form-group">
+<label>Divisi</label>
+<input id="anggaranDivisi">
+</div>
+
+<div class="form-group">
+<label>Penanggung Jawab</label>
+<input id="anggaranPJ">
+</div>
+
+<div class="form-group">
+<label>Tanggal</label>
+<input id="anggaranTanggal" type="date">
+</div>
+
+<div class="form-group">
+<label>Total Anggaran</label>
+<input id="anggaranNominal" type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="anggaranStatus">
+<option>Draft</option>
+<option>Diajukan</option>
+<option>Disetujui</option>
+<option>Ditolak</option>
+<option>Selesai</option>
+</select>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-light"
+onclick="closeModal('anggaranModal')">
+Batal
+</button>
+
+<button class="btn btn-primary">
+Simpan
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+<!-- ================= MODAL PENGAJUAN ================= -->
+
+<div class="modal" id="pengajuanModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3>Pengajuan Dana</h3>
+<button class="close" onclick="closeModal('pengajuanModal')">×</button>
+</div>
+
+<form id="pengajuanForm">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Divisi</label>
+<input id="pengajuanDivisi">
+</div>
+
+<div class="form-group">
+<label>Nama Kegiatan *</label>
+<input id="pengajuanKegiatan" required>
+</div>
+
+<div class="form-group">
+<label>Penanggung Jawab</label>
+<input id="pengajuanPJ">
+</div>
+
+<div class="form-group">
+<label>Tanggal</label>
+<input id="pengajuanTanggal" type="date">
+</div>
+
+<div class="form-group">
+<label>Jumlah Dana</label>
+<input id="pengajuanNominal" type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+<select id="pengajuanStatus">
+<option>Menunggu</option>
+<option>Disetujui</option>
+<option>Ditolak</option>
+<option>Dicairkan</option>
+<option>Selesai</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label>Keperluan</label>
+<textarea id="pengajuanKeperluan"></textarea>
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-light"
+onclick="closeModal('pengajuanModal')">
+Batal
+</button>
+
+<button class="btn btn-primary">
+Simpan
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* ============================================================
+   DATABASE LOCAL STORAGE
+============================================================ */
+
+const DB_KEY = "bendahara_bem_insis_v1";
+
+let db = JSON.parse(
+    localStorage.getItem(DB_KEY)
+) || {
+    anggota:[],
+    mahasiswa:[],
+    kas:[],
+    pembayaran:[],
+    anggaran:[],
+    pengajuan:[]
+};
+
+function saveDB(){
+
+    localStorage.setItem(
+        DB_KEY,
+        JSON.stringify(db)
+    );
+
+    updateAll();
+
+}
+
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+
+function rupiah(number){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(Number(number)||0);
+
+}
+
+function today(){
+
+    return new Date()
+        .toISOString()
+        .split("T")[0];
+
+}
+
+function generateId(){
+
+    return Date.now().toString(36)
+        + Math.random()
+        .toString(36)
+        .substring(2,8);
+
+}
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },2500);
+
+}
+
+function closeModal(id){
+
+    document
+        .getElementById(id)
+        .classList.remove("show");
+
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+function showPage(page,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(p=>{
+            p.classList.remove("active");
+        });
+
+    document
+        .getElementById("page-"+page)
+        .classList.add("active");
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    const titles = {
+
+        dashboard:"Dashboard Bendahara",
+        anggota:"Data Anggota BEM",
+        mahasiswa:"Data Seluruh Mahasiswa",
+        kas:"Buku Kas",
+        pembayaran:"Pembayaran Kas",
+        anggaran:"Rencana Anggaran",
+        pengajuan:"Pengajuan Dana",
+        laporan:"Laporan Keuangan",
+        evaluasi:"Evaluasi Keuangan"
+
+    };
+
+    document.getElementById(
+        "pageHeader"
+    ).textContent = titles[page];
+
+    if(window.innerWidth <= 768){
+        document
+            .getElementById("sidebar")
+            .classList.remove("open");
+    }
+
+}
+
+function toggleSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+let financeChart;
+let paymentChart;
+
+function calculateFinance(){
+
+    let pemasukan = 0;
+    let pengeluaran = 0;
+
+    db.kas.forEach(item=>{
+
+        if(item.jenis==="Pemasukan"){
+            pemasukan += Number(item.nominal);
+        }
+
+        if(item.jenis==="Pengeluaran"){
+            pengeluaran += Number(item.nominal);
+        }
+
+    });
+
+    return {
+        pemasukan,
+        pengeluaran,
+        saldo:pemasukan-pengeluaran
+    };
+
+}
+
+function calculatePayment(){
+
+    let dibayar = 0;
+    let tunggakan = 0;
+    let lunas = 0;
+    let belum = 0;
+
+    db.pembayaran.forEach(item=>{
+
+        const wajib =
+            Number(item.wajib)||0;
+
+        const bayar =
+            Number(item.dibayar)||0;
+
+        dibayar += bayar;
+
+        tunggakan +=
+            Math.max(wajib-bayar,0);
+
+        if(bayar>=wajib && wajib>0){
+            lunas++;
+        }
+
+        if(bayar===0){
+            belum++;
+        }
+
+    });
+
+    return {
+        dibayar,
+        tunggakan,
+        lunas,
+        belum
+    };
+
+}
+
+function updateDashboard(){
+
+    const finance =
+        calculateFinance();
+
+    const payment =
+        calculatePayment();
+
+    document.getElementById(
+        "dashboardSaldo"
+    ).textContent = rupiah(finance.saldo);
+
+    document.getElementById(
+        "dashboardPemasukan"
+    ).textContent = rupiah(finance.pemasukan);
+
+    document.getElementById(
+        "dashboardPengeluaran"
+    ).textContent = rupiah(finance.pengeluaran);
+
+    document.getElementById(
+        "dashboardTunggakan"
+    ).textContent = rupiah(payment.tunggakan);
+
+    document.getElementById(
+        "dashboardAnggota"
+    ).textContent = db.anggota.length;
+
+    document.getElementById(
+        "dashboardLunas"
+    ).textContent = payment.lunas;
+
+    document.getElementById(
+        "dashboardBelum"
+    ).textContent = payment.belum;
+
+    document.getElementById(
+        "dashboardTransaksi"
+    ).textContent = db.kas.length;
+
+    renderCharts();
+
+}
+
+
+/* ============================================================
+   CHART
+============================================================ */
+
+function renderCharts(){
+
+    const monthlyIn =
+        Array(12).fill(0);
+
+    const monthlyOut =
+        Array(12).fill(0);
+
+    db.kas.forEach(item=>{
+
+        if(!item.tanggal)return;
+
+        const month =
+            new Date(item.tanggal).getMonth();
+
+        if(item.jenis==="Pemasukan"){
+            monthlyIn[month]+=Number(item.nominal);
+        }else{
+            monthlyOut[month]+=Number(item.nominal);
+        }
+
+    });
+
+    if(financeChart){
+        financeChart.destroy();
+    }
+
+    financeChart =
+        new Chart(
+            document
+            .getElementById("financeChart"),
+            {
+                type:"bar",
+                data:{
+                    labels:[
+                        "Jan","Feb","Mar","Apr",
+                        "Mei","Jun","Jul","Agu",
+                        "Sep","Okt","Nov","Des"
+                    ],
+                    datasets:[
+                        {
+                            label:"Pemasukan",
+                            data:monthlyIn
+                        },
+                        {
+                            label:"Pengeluaran",
+                            data:monthlyOut
+                        }
+                    ]
+                },
+                options:{
+                    responsive:true
+                }
+            }
+        );
+
+
+    const payment =
+        calculatePayment();
+
+    const total =
+        db.anggota.length;
+
+    const sudah =
+        payment.lunas;
+
+    const belum =
+        Math.max(total-sudah,0);
+
+    if(paymentChart){
+        paymentChart.destroy();
+    }
+
+    paymentChart =
+        new Chart(
+            document
+            .getElementById("paymentChart"),
+            {
+                type:"doughnut",
+                data:{
+                    labels:[
+                        "Lunas",
+                        "Belum Lunas"
+                    ],
+                    datasets:[
+                        {
+                            data:[
+                                sudah,
+                                belum
+                            ]
+                        }
+                    ]
+                },
+                options:{
+                    responsive:true
+                }
+            }
+        );
+
+}
+
+
+/* ============================================================
+   ANGGOTA
+============================================================ */
+
+function openAnggotaModal(){
+
+    document
+        .getElementById("anggotaForm")
+        .reset();
+
+    document
+        .getElementById("anggotaId")
+        .value="";
+
+    document
+        .getElementById("anggotaModal")
+        .classList.add("show");
+
+}
+
+document
+.getElementById("anggotaForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const id =
+        document.getElementById("anggotaId").value;
+
+    const data = {
+
+        id:id || generateId(),
+
+        nama:
+        document.getElementById("anggotaNama").value,
+
+        nim:
+        document.getElementById("anggotaNim").value,
+
+        divisi:
+        document.getElementById("anggotaDivisi").value,
+
+        jabatan:
+        document.getElementById("anggotaJabatan").value,
+
+        prodi:
+        document.getElementById("anggotaProdi").value,
+
+        semester:
+        document.getElementById("anggotaSemester").value,
+
+        wa:
+        document.getElementById("anggotaWa").value,
+
+        kas:
+        Number(document.getElementById("anggotaKas").value)||0
+
+    };
+
+    const duplicate =
+        db.anggota.some(a=>
+            a.nim===data.nim &&
+            a.id!==id
+        );
+
+    if(duplicate){
+
+        alert("NIM sudah terdaftar.");
+
+        return;
+
+    }
+
+    if(id){
+
+        const index =
+            db.anggota.findIndex(a=>a.id===id);
+
+        db.anggota[index]=data;
+
+    }else{
+
+        db.anggota.push(data);
+
+    }
+
+    saveDB();
+
+    closeModal("anggotaModal");
+
+    showToast("Data anggota berhasil disimpan.");
+
+});
+
+
+function renderAnggota(){
+
+    const search =
+        document
+        .getElementById("searchAnggota")
+        .value
+        .toLowerCase();
+
+    const divisi =
+        document
+        .getElementById("filterDivisi")
+        .value;
+
+    const data =
+        db.anggota.filter(a=>{
+
+            const cocokSearch =
+                a.nama.toLowerCase().includes(search) ||
+                a.nim.toLowerCase().includes(search);
+
+            const cocokDivisi =
+                !divisi ||
+                a.divisi===divisi;
+
+            return cocokSearch && cocokDivisi;
+
+        });
+
+    const tbody =
+        document.getElementById("anggotaTable");
+
+    tbody.innerHTML="";
+
+    data.forEach((a,index)=>{
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${index+1}</td>
+
+            <td><strong>${escapeHTML(a.nama)}</strong></td>
+
+            <td>${escapeHTML(a.nim)}</td>
+
+            <td>${escapeHTML(a.divisi)}</td>
+
+            <td>${escapeHTML(a.jabatan)}</td>
+
+            <td>${escapeHTML(a.prodi)}</td>
+
+            <td>${rupiah(a.kas)}</td>
+
+            <td>
+
+                <div class="actions">
+
+                    <button
+                        class="btn btn-warning"
+                        onclick="editAnggota('${a.id}')">
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deleteAnggota('${a.id}')">
+                        Hapus
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function editAnggota(id){
+
+    const a =
+        db.anggota.find(x=>x.id===id);
+
+    if(!a)return;
+
+    document.getElementById("anggotaId").value=a.id;
+    document.getElementById("anggotaNama").value=a.nama;
+    document.getElementById("anggotaNim").value=a.nim;
+    document.getElementById("anggotaDivisi").value=a.divisi;
+    document.getElementById("anggotaJabatan").value=a.jabatan;
+    document.getElementById("anggotaProdi").value=a.prodi;
+    document.getElementById("anggotaSemester").value=a.semester;
+    document.getElementById("anggotaWa").value=a.wa;
+    document.getElementById("anggotaKas").value=a.kas;
+
+    document
+        .getElementById("anggotaModal")
+        .classList.add("show");
+
+}
+
+function deleteAnggota(id){
+
+    if(!confirm("Hapus data anggota ini?")){
+        return;
+    }
+
+    db.anggota =
+        db.anggota.filter(a=>a.id!==id);
+
+    saveDB();
+
+    showToast("Data anggota dihapus.");
+
+}
+
+
+/* ============================================================
+   MAHASISWA
+============================================================ */
+
+function openMahasiswaModal(){
+
+    document
+        .getElementById("mahasiswaForm")
+        .reset();
+
+    document
+        .getElementById("mahasiswaModal")
+        .classList.add("show");
+
+}
+
+document
+.getElementById("mahasiswaForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const data={
+
+        id:generateId(),
+
+        nama:
+        document.getElementById("mhsNama").value,
+
+        nim:
+        document.getElementById("mhsNim").value,
+
+        prodi:
+        document.getElementById("mhsProdi").value,
+
+        semester:
+        document.getElementById("mhsSemester").value,
+
+        wa:
+        document.getElementById("mhsWa").value,
+
+        status:
+        document.getElementById("mhsStatus").value
+
+    };
+
+    const duplicate =
+        db.mahasiswa.some(m=>m.nim===data.nim);
+
+    if(duplicate){
+
+        alert("NIM sudah terdaftar.");
+
+        return;
+
+    }
+
+    db.mahasiswa.push(data);
+
+    saveDB();
+
+    closeModal("mahasiswaModal");
+
+    showToast("Data mahasiswa berhasil ditambahkan.");
+
+});
+
+
+function renderMahasiswa(){
+
+    const search =
+        document
+        .getElementById("searchMahasiswa")
+        .value
+        .toLowerCase();
+
+    const data =
+        db.mahasiswa.filter(m=>
+            m.nama.toLowerCase().includes(search) ||
+            m.nim.toLowerCase().includes(search)
+        );
+
+    const tbody =
+        document.getElementById("mahasiswaTable");
+
+    tbody.innerHTML="";
+
+    data.forEach((m,index)=>{
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${index+1}</td>
+
+            <td>${escapeHTML(m.nama)}</td>
+
+            <td>${escapeHTML(m.nim)}</td>
+
+            <td>${escapeHTML(m.prodi)}</td>
+
+            <td>${m.semester}</td>
+
+            <td>${escapeHTML(m.wa)}</td>
+
+            <td>
+                <span class="badge badge-success">
+                    ${escapeHTML(m.status)}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteMahasiswa('${m.id}')">
+                    Hapus
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function deleteMahasiswa(id){
+
+    if(!confirm("Hapus mahasiswa ini?"))return;
+
+    db.mahasiswa =
+        db.mahasiswa.filter(m=>m.id!==id);
+
+    saveDB();
+
+    showToast("Data mahasiswa dihapus.");
+
+}
+
+
+/* ============================================================
+   BUKU KAS
+============================================================ */
+
+function openKasModal(){
+
+    document
+        .getElementById("kasForm")
+        .reset();
+
+    document
+        .getElementById("kasId")
+        .value="";
+
+    document
+        .getElementById("kasTanggal")
+        .value=today();
+
+    document
+        .getElementById("kasModal")
+        .classList.add("show");
+
+}
+
+document
+.getElementById("kasForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const id =
+        document.getElementById("kasId").value;
+
+    const data={
+
+        id:id||generateId(),
+
+        tanggal:
+        document.getElementById("kasTanggal").value,
+
+        jenis:
+        document.getElementById("kasJenis").value,
+
+        kategori:
+        document.getElementById("kasKategori").value,
+
+        nominal:
+        Number(
+            document.getElementById("kasNominal").value
+        ),
+
+        keterangan:
+        document.getElementById("kasKeterangan").value,
+
+        penanggung:
+        document.getElementById("kasPenanggung").value,
+
+        metode:
+        document.getElementById("kasMetode").value
+
+    };
+
+    if(id){
+
+        const index =
+            db.kas.findIndex(k=>k.id===id);
+
+        db.kas[index]=data;
+
+    }else{
+
+        db.kas.push(data);
+
+    }
+
+    saveDB();
+
+    closeModal("kasModal");
+
+    showToast("Transaksi berhasil disimpan.");
+
+});
+
+
+function renderKas(){
+
+    const search =
+        document
+        .getElementById("searchKas")
+        .value
+        .toLowerCase();
+
+    const filter =
+        document
+        .getElementById("filterKas")
+        .value;
+
+    const data =
+        db.kas
+        .filter(k=>{
+
+            const searchOK =
+                k.keterangan
+                .toLowerCase()
+                .includes(search);
+
+            const filterOK =
+                !filter ||
+                k.jenis===filter;
+
+            return searchOK && filterOK;
+
+        })
+        .sort((a,b)=>
+            new Date(b.tanggal)-
+            new Date(a.tanggal)
+        );
+
+    const tbody =
+        document.getElementById("kasTable");
+
+    tbody.innerHTML="";
+
+    data.forEach(k=>{
+
+        const color =
+            k.jenis==="Pemasukan"
+            ?"badge-success"
+            :"badge-danger";
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${k.tanggal}</td>
+
+            <td>
+                <span class="badge ${color}">
+                    ${k.jenis}
+                </span>
+            </td>
+
+            <td>${escapeHTML(k.kategori)}</td>
+
+            <td>${escapeHTML(k.keterangan)}</td>
+
+            <td><strong>${rupiah(k.nominal)}</strong></td>
+
+            <td>${escapeHTML(k.penanggung||"-")}</td>
+
+            <td>
+
+                <div class="actions">
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deleteKas('${k.id}')">
+                        Hapus
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    const finance =
+        calculateFinance();
+
+    document.getElementById(
+        "kasPemasukan"
+    ).textContent =
+        rupiah(finance.pemasukan);
+
+    document.getElementById(
+        "kasPengeluaran"
+    ).textContent =
+        rupiah(finance.pengeluaran);
+
+    document.getElementById(
+        "kasSaldo"
+    ).textContent =
+        rupiah(finance.saldo);
+
+}
+
+function deleteKas(id){
+
+    if(!confirm("Hapus transaksi ini?")){
+        return;
+    }
+
+    db.kas =
+        db.kas.filter(k=>k.id!==id);
+
+    saveDB();
+
+    showToast("Transaksi dihapus.");
+
+}
+
+
+/* ============================================================
+   PEMBAYARAN KAS
+============================================================ */
+
+function openPembayaranModal(){
+
+    document
+        .getElementById("pembayaranForm")
+        .reset();
+
+    const select =
+        document.getElementById("bayarAnggota");
+
+    select.innerHTML =
+        `<option value="">Pilih anggota</option>`;
+
+    db.anggota.forEach(a=>{
+
+        select.innerHTML += `
+            <option value="${a.id}">
+                ${escapeHTML(a.nama)} - ${escapeHTML(a.nim)}
+            </option>
+        `;
+
+    });
+
+    document.getElementById(
+        "bayarTahun"
+    ).value =
+        new Date().getFullYear();
+
+    document.getElementById(
+        "bayarTanggal"
+    ).value=today();
+
+    document
+        .getElementById("pembayaranModal")
+        .classList.add("show");
+
+}
+
+document
+.getElementById("bayarAnggota")
+.addEventListener("change",function(){
+
+    const anggota =
+        db.anggota.find(
+            a=>a.id===this.value
+        );
+
+    if(anggota){
+
+        document.getElementById(
+            "bayarWajib"
+        ).value=anggota.kas;
+
+    }
+
+});
+
+
+document
+.getElementById("pembayaranForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const anggotaId =
+        document.getElementById(
+            "bayarAnggota"
+        ).value;
+
+    const anggota =
+        db.anggota.find(
+            a=>a.id===anggotaId
+        );
+
+    if(!anggota){
+
+        alert("Pilih anggota.");
+
+        return;
+
+    }
+
+    const wajib =
+        Number(
+            document.getElementById(
+                "bayarWajib"
+            ).value
+        );
+
+    const dibayar =
+        Number(
+            document.getElementById(
+                "bayarNominal"
+            ).value
+        );
+
+    if(dibayar>wajib){
+
+        if(!confirm(
+            "Pembayaran melebihi kewajiban. Lanjutkan?"
+        )){
+            return;
+        }
+
+    }
+
+    db.pembayaran.push({
+
+        id:generateId(),
+
+        anggotaId,
+
+        nama:anggota.nama,
+
+        nim:anggota.nim,
+
+        bulan:
+        document.getElementById("bayarBulan").value,
+
+        tahun:
+        document.getElementById("bayarTahun").value,
+
+        wajib,
+
+        dibayar,
+
+        tanggal:
+        document.getElementById("bayarTanggal").value,
+
+        metode:
+        document.getElementById("bayarMetode").value
+
+    });
+
+    saveDB();
+
+    closeModal("pembayaranModal");
+
+    showToast("Pembayaran berhasil dicatat.");
+
+});
+
+
+function renderPembayaran(){
+
+    const tbody =
+        document.getElementById(
+            "pembayaranTable"
+        );
+
+    tbody.innerHTML="";
+
+    db.pembayaran.forEach(p=>{
+
+        const sisa =
+            Math.max(
+                Number(p.wajib)-
+                Number(p.dibayar),
+                0
+            );
+
+        let status="LUNAS";
+        let badge="badge-success";
+
+        if(Number(p.dibayar)===0){
+
+            status="BELUM BAYAR";
+            badge="badge-danger";
+
+        }else if(sisa>0){
+
+            status="SEBAGIAN";
+            badge="badge-warning";
+
+        }
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${escapeHTML(p.nama)}</td>
+
+            <td>${p.bulan} ${p.tahun}</td>
+
+            <td>${rupiah(p.wajib)}</td>
+
+            <td>${rupiah(p.dibayar)}</td>
+
+            <td>${rupiah(sisa)}</td>
+
+            <td>
+                <span class="badge ${badge}">
+                    ${status}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deletePembayaran('${p.id}')">
+                    Hapus
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    const payment =
+        calculatePayment();
+
+    document.getElementById(
+        "totalKasBayar"
+    ).textContent =
+        rupiah(payment.dibayar);
+
+    document.getElementById(
+        "totalTunggakan"
+    ).textContent =
+        rupiah(payment.tunggakan);
+
+}
+
+function deletePembayaran(id){
+
+    if(!confirm("Hapus pembayaran ini?")){
+        return;
+    }
+
+    db.pembayaran =
+        db.pembayaran.filter(
+            p=>p.id!==id
+        );
+
+    saveDB();
+
+    showToast("Pembayaran dihapus.");
+
+}
+
+
+/* ============================================================
+   ANGGARAN
+============================================================ */
+
+function openAnggaranModal(){
+
+    document
+        .getElementById("anggaranForm")
+        .reset();
+
+    document
+        .getElementById("anggaranModal")
+        .classList.add("show");
+
+}
+
+document
+.getElementById("anggaranForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    db.anggaran.push({
+
+        id:generateId(),
+
+        kegiatan:
+        document.getElementById(
+            "anggaranKegiatan"
+        ).value,
+
+        divisi:
+        document.getElementById(
+            "anggaranDivisi"
+        ).value,
+
+        pj:
+        document.getElementById(
+            "anggaranPJ"
+        ).value,
+
+        tanggal:
+        document.getElementById(
+            "anggaranTanggal"
+        ).value,
+
+        nominal:
+        Number(
+            document.getElementById(
+                "anggaranNominal"
+            ).value
+        ),
+
+        status:
+        document.getElementById(
+            "anggaranStatus"
+        ).value
+
+    });
+
+    saveDB();
+
+    closeModal("anggaranModal");
+
+    showToast("Anggaran berhasil ditambahkan.");
+
+});
+
+
+function renderAnggaran(){
+
+    const tbody =
+        document.getElementById(
+            "anggaranTable"
+        );
+
+    tbody.innerHTML="";
+
+    db.anggaran.forEach(a=>{
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${escapeHTML(a.kegiatan)}</td>
+
+            <td>${escapeHTML(a.divisi)}</td>
+
+            <td>${escapeHTML(a.pj)}</td>
+
+            <td>${a.tanggal||"-"}</td>
+
+            <td>${rupiah(a.nominal)}</td>
+
+            <td>
+                <span class="badge badge-primary">
+                    ${escapeHTML(a.status)}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteAnggaran('${a.id}')">
+                    Hapus
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function deleteAnggaran(id){
+
+    if(!confirm("Hapus rencana anggaran?")){
+        return;
+    }
+
+    db.anggaran =
+        db.anggaran.filter(
+            a=>a.id!==id
+        );
+
+    saveDB();
+
+}
+
+
+/* ============================================================
+   PENGAJUAN
+============================================================ */
+
+function openPengajuanModal(){
+
+    document
+        .getElementById("pengajuanForm")
+        .reset();
+
+    document
+        .getElementById("pengajuanModal")
+        .classList.add("show");
+
+}
+
+document
+.getElementById("pengajuanForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    db.pengajuan.push({
+
+        id:generateId(),
+
+        divisi:
+        document.getElementById(
+            "pengajuanDivisi"
+        ).value,
+
+        kegiatan:
+        document.getElementById(
+            "pengajuanKegiatan"
+        ).value,
+
+        pj:
+        document.getElementById(
+            "pengajuanPJ"
+        ).value,
+
+        tanggal:
+        document.getElementById(
+            "pengajuanTanggal"
+        ).value,
+
+        nominal:
+        Number(
+            document.getElementById(
+                "pengajuanNominal"
+            ).value
+        ),
+
+        status:
+        document.getElementById(
+            "pengajuanStatus"
+        ).value,
+
+        keperluan:
+        document.getElementById(
+            "pengajuanKeperluan"
+        ).value
+
+    });
+
+    saveDB();
+
+    closeModal("pengajuanModal");
+
+    showToast("Pengajuan berhasil disimpan.");
+
+});
+
+
+function renderPengajuan(){
+
+    const tbody =
+        document.getElementById(
+            "pengajuanTable"
+        );
+
+    tbody.innerHTML="";
+
+    db.pengajuan.forEach(p=>{
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${p.tanggal||"-"}</td>
+
+            <td>${escapeHTML(p.divisi)}</td>
+
+            <td>${escapeHTML(p.kegiatan)}</td>
+
+            <td>${escapeHTML(p.pj)}</td>
+
+            <td>${rupiah(p.nominal)}</td>
+
+            <td>
+                <span class="badge badge-primary">
+                    ${escapeHTML(p.status)}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deletePengajuan('${p.id}')">
+                    Hapus
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+function deletePengajuan(id){
+
+    if(!confirm("Hapus pengajuan ini?")){
+        return;
+    }
+
+    db.pengajuan =
+        db.pengajuan.filter(
+            p=>p.id!==id
+        );
+
+    saveDB();
+
+}
+
+
+/* ============================================================
+   LAPORAN
+============================================================ */
+
+function generateLaporan(){
+
+    const mulai =
+        document.getElementById(
+            "laporanMulai"
+        ).value;
+
+    const selesai =
+        document.getElementById(
+            "laporanSelesai"
+        ).value;
+
+    let data =
+        [...db.kas];
+
+    if(mulai){
+
+        data =
+            data.filter(
+                x=>x.tanggal>=mulai
+            );
+
+    }
+
+    if(selesai){
+
+        data =
+            data.filter(
+                x=>x.tanggal<=selesai
+            );
+
+    }
+
+    let pemasukan=0;
+    let pengeluaran=0;
+
+    data.forEach(x=>{
+
+        if(x.jenis==="Pemasukan"){
+            pemasukan+=Number(x.nominal);
+        }else{
+            pengeluaran+=Number(x.nominal);
+        }
+
+    });
+
+    document.getElementById(
+        "laporanPemasukan"
+    ).textContent=rupiah(pemasukan);
+
+    document.getElementById(
+        "laporanPengeluaran"
+    ).textContent=rupiah(pengeluaran);
+
+    document.getElementById(
+        "laporanSaldo"
+    ).textContent=
+        rupiah(
+            pemasukan-pengeluaran
+        );
+
+    document.getElementById(
+        "laporanTunggakan"
+    ).textContent=
+        rupiah(
+            calculatePayment().tunggakan
+        );
+
+    document.getElementById(
+        "periodeLaporan"
+    ).textContent=
+        mulai || selesai
+        ? `${mulai||"Awal"} s/d ${selesai||"Sekarang"}`
+        : "Semua Periode";
+
+    const tbody =
+        document.getElementById(
+            "laporanTable"
+        );
+
+    tbody.innerHTML="";
+
+    data.forEach(x=>{
+
+        tbody.innerHTML += `
+
+        <tr>
+
+            <td>${x.tanggal}</td>
+
+            <td>${x.jenis}</td>
+
+            <td>${escapeHTML(x.kategori)}</td>
+
+            <td>${escapeHTML(x.keterangan)}</td>
+
+            <td>${rupiah(x.nominal)}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+
+/* ============================================================
+   EVALUASI
+============================================================ */
+
+function renderEvaluasi(){
+
+    const finance =
+        calculateFinance();
+
+    const total =
+        finance.pemasukan+
+        finance.pengeluaran;
+
+    const payment =
+        calculatePayment();
+
+    const kepatuhan =
+        db.anggota.length
+        ? Math.round(
+            payment.lunas/
+            db.anggota.length*100
+        )
+        : 0;
+
+    document.getElementById(
+        "evaluasiTransaksi"
+    ).textContent=db.kas.length;
+
+    document.getElementById(
+        "evaluasiPemasukan"
+    ).textContent=
+        total
+        ? Math.round(
+            finance.pemasukan/total*100
+        )+"%"
+        :"0%";
+
+    document.getElementById(
+        "evaluasiPengeluaran"
+    ).textContent=
+        total
+        ? Math.round(
+            finance.pengeluaran/total*100
+        )+"%"
+        :"0%";
+
+    document.getElementById(
+        "evaluasiKas"
+    ).textContent=
+        kepatuhan+"%";
+
+    document.getElementById(
+        "evaluasiText"
+    ).innerHTML=`
+
+        <p style="margin-bottom:10px;">
+            <strong>Saldo saat ini:</strong>
+            ${rupiah(finance.saldo)}
+        </p>
+
+        <p style="margin-bottom:10px;">
+            <strong>Total pemasukan:</strong>
+            ${rupiah(finance.pemasukan)}
+        </p>
+
+        <p style="margin-bottom:10px;">
+            <strong>Total pengeluaran:</strong>
+            ${rupiah(finance.pengeluaran)}
+        </p>
+
+        <p style="margin-bottom:10px;">
+            <strong>Total tunggakan:</strong>
+            ${rupiah(payment.tunggakan)}
+        </p>
+
+        <p>
+            <strong>Kepatuhan pembayaran kas:</strong>
+            ${kepatuhan}%
+        </p>
+
+    `;
+
+}
+
+
+/* ============================================================
+   BACKUP / RESTORE
+============================================================ */
+
+function backupData(){
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    db,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    a.href=url;
+
+    a.download=
+        "backup-bendahara-bem.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    showToast("Backup data berhasil dibuat.");
+
+}
+
+
+function restoreData(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file)return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload=function(e){
+
+        try{
+
+            const imported =
+                JSON.parse(e.target.result);
+
+            if(!imported.anggota ||
+               !imported.kas){
+
+                throw new Error();
+
+            }
+
+            if(!confirm(
+                "Restore akan mengganti seluruh data saat ini. Lanjutkan?"
+            )){
+                return;
+            }
+
+            db=imported;
+
+            saveDB();
+
+            showToast(
+                "Data berhasil direstore."
+            );
+
+        }catch(error){
+
+            alert(
+                "File backup tidak valid."
+            );
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+}
+
+
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
+
+function escapeHTML(value){
+
+    return String(value??"")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* ============================================================
+   UPDATE ALL
+============================================================ */
+
+function updateAll(){
+
+    renderAnggota();
+    renderMahasiswa();
+    renderKas();
+    renderPembayaran();
+    renderAnggaran();
+    renderPengajuan();
+    updateDashboard();
+    renderEvaluasi();
+    generateLaporan();
+
+}
+
+
+/* ============================================================
+   DATE
+============================================================ */
+
+document.getElementById(
+    "currentDate"
+).textContent =
+    new Intl.DateTimeFormat(
+        "id-ID",
+        {
+            dateStyle:"full"
+        }
+    ).format(new Date());
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+updateAll();
+
+</script>
+
+</body>
+</html>
